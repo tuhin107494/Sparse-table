@@ -1,22 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std ;
+#define ll long long int 
 
 const int ln = 9 ;
-int rmq[1005][1005][10][10];
-int n , m , a[1005][1005],Log[1050];  /// a is the given matrix
-
-void preprocess () {
-    FOR(i,0,1004) {
+int rmq[502][502][10][10];
+int n , m , a[505][505],Log[506];  /// a is the given matrix
+void log_fun()
+{
+       for(int i=1;i<=505;i++){
         int j = 0 ;
         while(1<<(j+1)<=i) j++;
         Log[i] = j ;
     }
-    FOR(i,0,ln) {
-        FOR(j,0,ln) {
-            FOR(x,1,n) {
+}
+void preprocess () {
+// point 0 base
+    for(int i=0;i<ln;i++){
+        for(int j=0;j<ln;j++){
+            for(int x=0;x<n;x++){
                 if (x+(1<<i)-1>n) break;
-                FOR(y,1,m) {
-                    if (y+(1<<j)-1>m) break;
+                for(int y=0;y<n;y++){
+                    if (y+(1<<j)-1>n) break;
                     if (i==0 and j==0) {
                         rmq[x][y][0][0] = a[x][y] ;
                     }
@@ -48,9 +52,38 @@ int query(int x1,int y1,int x2,int y2) {        /// gives maximum of matrix with
 int main () {
 
     //IN ;
-
+   #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    freopen("Error.txt", "w", stderr);
+    #endif 
+    ios::sync_with_stdio(false); cin.tie(0);cout.tie(0);
+    ll t,cs=0;
+    cin>>t;
+    log_fun();
+    while(t--){
     cin >> n >> m ;
-    FOR(i,1,n) FOR(j,1,m) si(a[i][j]) ;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cin>>a[i][j];
+        }
+    }
+    preprocess();
+    cout<<"Case "<<++cs<<":\n";
+    while(m--)
+    {
+        ll x1,y1,x2,y2,s;
+        cin>>x1>>y1>>s;
+        x1--;
+        y1--;
+        x2=x1+s-1;
+        y2=y1+s-1;
+        cout<<query(x1,y1,x2,y2)<<endl;
+    }
+
+}
 
     return 0 ;
 }
